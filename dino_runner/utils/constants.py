@@ -1,7 +1,12 @@
-from asyncio import shield
 import pygame
 import os
 
+from asyncio import shield
+from pygame import mixer
+
+
+
+pygame.init()
 # Global Constants
 TITLE = "Chrome Dino Runner"
 SCREEN_HEIGHT = 600
@@ -68,7 +73,13 @@ HAMMER = pygame.image.load(os.path.join(IMG_DIR, 'Other/hammer.png'))
 
 BG = pygame.image.load(os.path.join(IMG_DIR, 'Other/Track.png'))
 
+#SOUNDS
+DEAD_SOUND = pygame.mixer.Sound('dino_runner/assets/Other/lose.mp3')
+POINTS_SOUND = pygame.mixer.Sound('dino_runner/assets/Other/points.mp3')
+JUMP_SOUND = pygame.mixer.Sound('dino_runner/assets/Other/jump.mp3')
+
 HEART = pygame.image.load(os.path.join(IMG_DIR, 'Other/SmallHeart.png'))
 
 DEFAULT_TYPE = "default"
 SHIELD_TYPE = "shield"
+HAMMER_TYPE = "hammer"

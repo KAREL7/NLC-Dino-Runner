@@ -3,8 +3,7 @@ import random
 
 from turtle import delay
 from dino_runner.components.obstacles.cactus import Cactus
-from dino_runner.utils.constants import SMALL_CACTUS, LARGE_CACTUS
-
+from dino_runner.utils.constants import DEAD_SOUND, SMALL_CACTUS, LARGE_CACTUS
 
 class ObstacleManager:
     
@@ -26,6 +25,7 @@ class ObstacleManager:
             i.update(game.game_speed, self.obstacles)
             if game.player.dino_rect.colliderect(i.rect):
                 if not game.player.shield:
+                    DEAD_SOUND.play()
                     pygame.time.delay(500)
                     game.playing = False
                     game.death_count += 1

@@ -1,11 +1,10 @@
 import pygame
 import math
 from dino_runner.components.power_ups.power_up_manager import PowerUpManager
-from dino_runner.utils.constants import BG, ICON, RUNNING, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS
+from dino_runner.utils.constants import BG, ICON, POINTS_SOUND, RUNNING, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 
-FONT_STYLE = 'freesansbold.ttf'
 class Game:
     def __init__(self):
         pygame.init()
@@ -28,12 +27,16 @@ class Game:
         self.death_count = 0
         self.lives = 3
 
+
+    def font_custom (self, font, size):
+        font_style = pygame.font.SysFont(font, size)
+        return font_style
+
     def execute_game(self):
         self.runing = True
         while self.runing:
             if not self.playing:
                 self.show_menu()
-        
         pygame.display.quit()
         pygame.quit()
 
@@ -46,7 +49,6 @@ class Game:
             self.events()
             self.update()
             self.draw()
-
 
     def events(self):
         for event in pygame.event.get():
@@ -69,17 +71,22 @@ class Game:
         if math.trunc (self.points) % 10 == 0:
             self.game_speed += 0.2
 
+        """if math.trunc (self.points) > 0 and math.trunc (self.points) % 100 == 0:
+                POINTS_SOUND.play()"""
+    
         self.points_game = self.points
-
         if self.points_game >= self.points_max:
             self.points_max = self.points_game
           
     def draw_score(self):
-        font = pygame.font.Font(FONT_STYLE, 30)
+        font = self.font_custom('rockwellnegritacursiva', 30)
         text = font.render (f'Points : {math.trunc(self.points)}', True, (128,128,128))
         text_rect = text.get_rect()
-        text_rect.center = (100,50)
+        text_rect.center = (150,50)
         self.screen.blit(text, text_rect)
+
+        if self.points % 100 == 0:
+            POINTS_SOUND.play()
 
         """text1 = font.render (f'Points Max : {self.points_max}', True, (128,128,128))
         text_rect1 = text.get_rect()
@@ -100,14 +107,14 @@ class Game:
         half_screen_width = SCREEN_WIDTH // 2
 
         if self.death_count == 0: 
-            font = pygame.font.Font(FONT_STYLE, 30)
+            font = self.font_custom('garamondcursiva', 40)
             text = font.render ('Press any Key to Start the Game', True, (0,0,0))
             text_rect = text.get_rect()
             text_rect.center = (half_screen_width, half_screen_height)
             self.screen.blit(text, text_rect)
 
         elif self.death_count > 0 :
-            font = pygame.font.Font(FONT_STYLE, 30)
+            font = self.font_custom('garamondcursiva', 40)
             text = font.render ('GAME OVER', True, (0,0,0))
             text_restart = font.render ('Press any key to Start a new Game', True, (0,0,0))
             text_score = font.render (f'Score : {math.trunc(self.points_game)}', True, (128,128,128))
@@ -129,6 +136,8 @@ class Game:
         self.draw_background()
         self.draw_score()
         self.player.draw(self.screen)
+        self.player.check_invi(self.screen)
+        self.player.check_hammer(self.screen)
         self.obstacle_manager.draw(self.screen)
         self.power_up_manager.draw(self.screen)
         pygame.display.update()
