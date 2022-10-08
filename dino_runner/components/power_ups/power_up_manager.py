@@ -14,6 +14,7 @@ class PowerUpManager:
             if self.spawn == points:
                 self.spawn = random.randint(self.spawn * 2, self.spawn * 3)
                 change_power_up = random.randint(0,1)
+
                 if change_power_up == 1:
                     self.power_ups.append(Shield())
                 else:
